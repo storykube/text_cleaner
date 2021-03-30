@@ -6,8 +6,8 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="sentence_tokenizer",
-    version="0.0.1",
+    name="text_cleaner",
+    version="0.0.5",
     author="Ottavio Fogliata",
     author_email="ottavio.fogliata@storykube.com",
     description="A really rough text cleaner with an ugly code. But very useful.",
