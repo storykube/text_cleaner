@@ -5,13 +5,6 @@ from setuptools.command.install import install
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
-
-def installNLTKDependencies():
-    import nltk
-    nltk.download("punkt")
-    nltk.download("stopwords")
-
-
 setuptools.setup(
     name="sentence_tokenizer",
     version="0.0.1",
@@ -34,4 +27,3 @@ setuptools.setup(
     python_requires=">=3.6",
 )
 
-installNLTKDependencies()
