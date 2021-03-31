@@ -7,6 +7,7 @@ import re
 from copy import deepcopy
 
 from sentence_tokenizer import SentenceTokenizer
+from .unicode import unicode_simplify_punctuation
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -70,6 +71,8 @@ class Clean:
 
     @staticmethod
     def checkHTML(text) -> str:
+
+        text = unicode_simplify_punctuation(text)
 
         # useless empty paragraph or error during generation of paragraph html tag (in case of html body)
         text = text.replace("<p></p>", "")
@@ -427,6 +430,8 @@ class Clean:
 
         # I'm saving into cache also the elaborated clean text, to avoid multiple clean of the same input.
         text_cleaned_cache_key = get_md5_from_string(input_text)
+
+        text = unicode_simplify_punctuation(text)  # latest unicode replacement
 
         CleanStaticMem.cache[text_cleaned_cache_key] = text
 
