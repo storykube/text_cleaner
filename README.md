@@ -20,7 +20,6 @@ pip3 install git+https://github.com/storykube/text_cleaner.git
 #!/usr/bin/python3
 from text_cleaner import Clean
 
-
 r = Clean.that("ON YOUTUBE FRIDAY morning, several hundred viewers watched a live?animated video of a female Minecraft avatar with bare breasts opening a present full of the poop emoji. In the video’s thumbnail, two inflated breasts held up a poop Minecraft brick.")
 
 print(r)
