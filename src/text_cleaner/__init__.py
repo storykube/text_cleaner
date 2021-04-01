@@ -259,6 +259,57 @@ class Clean:
         # add spaces after ?!,.  - only if you have a word after.
         text = re.sub(r'(?<=[.,?!])(?=\w[^\s])', r' ', text)
 
+         # domains ---------------------------------------
+        text = f' {text} '  
+        # ^ Here, it's usefull to keep space 
+        # at start and end of string.
+        text = text.replace(' . com ', '.com ')
+        text = text.replace('. com ', '.com ')
+        text = text.replace(' .com ', '.com ')
+
+        text = text.replace(' . gov ', '.gov ')
+        text = text.replace('. gov ', '.gov ')
+        text = text.replace(' .gov ', '.gov ')
+
+        text = text.replace(' . it ', '.it ')
+        text = text.replace('. it ', '.it ')
+        text = text.replace(' .it ', '.it ')
+
+        text = text.replace(' . fr ', '.fr ')
+        text = text.replace('. fr ', '.fr ')
+        text = text.replace(' .fr ', '.fr ')
+
+        text = text.replace(' . uk ', '.uk ')
+        text = text.replace('. uk ', '.uk ')
+        text = text.replace(' .uk ', '.uk ')
+
+        text = text.replace(' . us ', '.us ')
+        text = text.replace('. us ', '.us ')
+        text = text.replace(' .us ', '.us ')
+
+        text = text.replace(' . pk ', '.pk ')
+        text = text.replace('. pk ', '.pk ')
+        text = text.replace(' .pk ', '.pk ')
+
+        text = text.replace(' . eu ', '.eu ')
+        text = text.replace('. eu ', '.eu ')
+        text = text.replace(' .eu ', '.eu ')
+
+        text = text.replace(' . ru ', '.ru ')
+        text = text.replace('. ru ', '.ru ')
+        text = text.replace(' .ru ', '.ru ')
+
+        text = text.replace(' . org ', '.org ')
+        text = text.replace('. org ', '.org ')
+        text = text.replace(' .org ', '.org ')
+
+        text = text.replace(' . net ', '.net ')
+        text = text.replace('. net ', '.net ')
+        text = text.replace(' .net ', '.net ')
+        text = text.strip()
+        # ------------------------------------------------
+
+
         # duplicate chars:
         text = text.replace("????", "?")
         text = text.replace("???", "?")
@@ -377,41 +428,6 @@ class Clean:
         text = text.replace(" U. S.", " U.S.")
         text = text.replace(" u. S.", " U.S.")
         text = text.replace(" u. s.", " U.S.")
-
-        # domains ---------------------------------------
-        text = text.replace(' . com ', '.com ')
-        text = text.replace(' .com ', '.com ')
-
-        text = text.replace(' . gov ', '.gov ')
-        text = text.replace(' .gov ', '.gov ')
-
-        text = text.replace(' . it ', '.it ')
-        text = text.replace(' .it ', '.it ')
-
-        text = text.replace(' . fr ', '.fr ')
-        text = text.replace(' .fr ', '.fr ')
-
-        text = text.replace(' . uk ', '.uk ')
-        text = text.replace(' .uk ', '.uk ')
-
-        text = text.replace(' . us ', '.us ')
-        text = text.replace(' .us ', '.us ')
-
-        text = text.replace(' . pk ', '.pk ')
-        text = text.replace(' .pk ', '.pk ')
-
-        text = text.replace(' . eu ', '.eu ')
-        text = text.replace(' .eu ', '.eu ')
-
-        text = text.replace(' . ru ', '.ru ')
-        text = text.replace(' .ru ', '.ru ')
-
-        text = text.replace(' . org ', '.org ')
-        text = text.replace(' .org ', '.org ')
-
-        text = text.replace(' . net ', '.net ')
-        text = text.replace(' .net ', '.net ')
-        # ------------------------------------------------
 
         # replace the number like 33, 3333 (error with comma formatting) with 33,3333
         text = re.sub('(\d+)\,\s(\d{3,6})', r"\1,\2", text)
