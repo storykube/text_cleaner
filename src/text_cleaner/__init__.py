@@ -257,7 +257,7 @@ class Clean:
         text = text.replace("!.", "!")
 
         # add spaces after ?!,.  - only if you have a word after.
-        text = re.sub(r'(?<=[.,?!])(?=\w[^\s])', r' ', text)
+        text = re.sub(r'(?<=[.,?!])(?=[a-zA-Z][^\s])', r' ', text)
 
          # domains ---------------------------------------
         text = f' {text} '  
