@@ -44,32 +44,6 @@ class Clean:
         return clean_text
 
     @staticmethod
-    def remove_useless_uppercase_or_newspaper_title_word(text):
-        # Remove first word if it is totally uppercase and more than N letters.
-        # CNN - , REUTERS - , etc.. NEW YORK -
-        try:
-
-            # -- with space
-            words = text.split()
-            if words[0].isupper() and len(words[0]) >= 3:
-                text = text.replace(words[0], "")
-                if words[1].isupper() and len(words[1]) >= 3:
-                    text = text.replace(words[1], "")
-
-            # Remove useless chars in the intro of text
-            substr_intro_orig = text[0:5]
-            if "-" or "/" or "\\" in substr_intro_orig:
-                new_substr_intro = substr_intro_orig.replace(
-                    "-", "").replace("/", "").replace("\\", "")
-                text = text.replace(substr_intro_orig, new_substr_intro)
-
-        except Exception as e:
-            # print(e)
-            pass
-
-        return text
-
-    @staticmethod
     def checkHTML(text) -> str:
 
         text = unicode_simplify_punctuation(text)
@@ -131,6 +105,12 @@ class Clean:
         cache_key = get_md5_from_string(input_text)
         if text in CleanStaticMem.cache.keys():
             return CleanStaticMem.cache[cache_key]
+
+        # Clean text from wrong repeated quotes.
+        text = text.replace('“““', '“')  # open apices (x3)
+        text = text.replace('““', '“')  # open apices (x2)
+        text = text.replace('”””', '”')  # close apices (x3)
+        text = text.replace('””', '”')  # close apices (x2)
 
         text = Clean.remove_tags(text)
         # Add some space to between symbols
@@ -196,11 +176,11 @@ class Clean:
         text = text.replace('” .', '”.')
         text = text.replace(' ”.', '”.')
 
-        # # single quote
-        # res = re.findall('‘(.*?)’', text)
-        # for r in res:
-        #     if len(r) <= 200:
-        #         text = text.replace('‘' + r + '’', '«' + r + '»')
+        # single quote replace.
+        res = re.findall('‘(.*?)’', text)
+        for r in res:
+            if len(r) <= 200:
+                text = text.replace('‘' + r + '’', '«' + r + '»')
 
         # if those ’ remain in the text, then:
         # ’
@@ -249,9 +229,6 @@ class Clean:
                 if len(r) <= 300:
                     r = r.replace('”', '')
                     text = text.replace(original_sent, r)
-
-        #  Remove first word if it is totally uppercase and more than N letters.
-        text = Clean.remove_useless_uppercase_or_newspaper_title_word(text)
 
         text = text.replace("?.", "?")
         text = text.replace("!.", "!")
@@ -308,7 +285,6 @@ class Clean:
         text = text.replace(' .net ', '.net ')
         text = text.strip()
         # ------------------------------------------------
-
 
         # duplicate chars:
         text = text.replace("????", "?")
