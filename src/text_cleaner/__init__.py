@@ -438,7 +438,7 @@ class Clean:
         count_quotes_open = text.count('“')
         count_quotes_close = text.count('”')
         count_quotes = count_quotes_open + count_quotes_close
-        if count_quotes % 2 != 0:  # odd results
+        if count_quotes > 0 and count_quotes % 2 != 0:  # odd results
             dict_occurs = {}
             dict_scores = {}
             quotes_occurs = re.findall(r'(“.*?”)', text)
@@ -450,12 +450,13 @@ class Clean:
                 dict_scores[iq] = int(len(text_quoted))
                 dict_occurs[iq] = text_quoted
 
-            to_remove_id = max(dict_scores, key=dict_scores.get)
-            to_remove_text = dict_occurs[to_remove_id]
-            if count_quotes_open > count_quotes_close:
-                text = text.replace(to_remove_text, to_remove_text[1:])
-            else:
-                text = text.replace(to_remove_text, to_remove_text[:-1])
+            if len(dict_scores) > 0:  # if found.
+                to_remove_id = max(dict_scores, key=dict_scores.get)
+                to_remove_text = dict_occurs[to_remove_id]
+                if count_quotes_open > count_quotes_close:
+                    text = text.replace(to_remove_text, to_remove_text[1:])
+                else:
+                    text = text.replace(to_remove_text, to_remove_text[:-1])
         return text
 
     @staticmethod
