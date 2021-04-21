@@ -222,6 +222,9 @@ class Clean:
 
         text = text.replace("’", "'")
 
+        # fix odd quotes.
+        text = Clean.fix_odd_quotes(text)
+
         for x in range(5):
             res = re.findall('“(.*?)”', text)
             for r in res:
@@ -423,10 +426,36 @@ class Clean:
         # I'm saving into cache also the elaborated clean text, to avoid multiple clean of the same input.
         text_cleaned_cache_key = get_md5_from_string(input_text)
 
-        text = unicode_simplify_punctuation(text)  # latest unicode replacement
+        # text = unicode_simplify_punctuation(text)  # latest unicode replacement
 
         CleanStaticMem.cache[text_cleaned_cache_key] = text
 
+        return text
+
+    @staticmethod
+    def fix_odd_quotes(text):
+        # fix odd quotes.
+        count_quotes_open = text.count('“')
+        count_quotes_close = text.count('”')
+        count_quotes = count_quotes_open + count_quotes_close
+        if count_quotes % 2 != 0:  # odd results
+            dict_occurs = {}
+            dict_scores = {}
+            quotes_occurs = re.findall(r'(“.*?”)', text)
+            quotes_occurs_greedy = re.findall(r'(“.*”)', text)
+            quotes_occurs.extend(quotes_occurs_greedy)
+            iq = -1
+            for text_quoted in quotes_occurs:
+                iq += 1
+                dict_scores[iq] = int(len(text_quoted))
+                dict_occurs[iq] = text_quoted
+
+            to_remove_id = max(dict_scores, key=dict_scores.get)
+            to_remove_text = dict_occurs[to_remove_id]
+            if count_quotes_open > count_quotes_close:
+                text = text.replace(to_remove_text, to_remove_text[1:])
+            else:
+                text = text.replace(to_remove_text, to_remove_text[:-1])
         return text
 
     @staticmethod

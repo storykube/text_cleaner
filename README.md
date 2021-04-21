@@ -7,6 +7,7 @@ We've taken the liberty here of following all the worst bad practices. Make good
 First of all, **install the storykube sentence tokenizer**
 
 ```bash
+pip3 install nltk
 pip3 install git+https://github.com/storykube/sentence-tokenizer.git
 ```
 
