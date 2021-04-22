@@ -300,6 +300,14 @@ class Clean:
         text = text.strip()
         # ------------------------------------------------
 
+        # paragraph or notes marks
+        ac = -1
+        while ac < 101:  # While the value of the variable a is less than 101 do the following:
+            ac += 1
+            text = text.replace(f' [{str(ac)}] ', '')
+            text = text.replace(' { ' + str(ac) + ' } ', '')
+            text = text.replace(f' ({str(ac)} ', '')
+
         # duplicate chars:
         text = text.replace("????", "?")
         text = text.replace("???", "?")

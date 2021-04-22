@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 from text_cleaner import Clean
 
-text = "“ON YOUTUBE FRIDAY morning, several hundred viewers watched $ 5.100,40 a live” ?animated video of a female " \
+text = "“ON YOUTUBE FRIDAY morning, [3] several hundred viewers watched $ 5.100,40 a live” ?animated video of a female " \
     "Minecraft avatar with bare breasts opening a present full of the poop emoji. In the video’s thumbnail, " \
     "two inflated breasts held up a poop Minecraft brick." \
     "It’s one of several disturbing and grotesque animated Minecraft videos identified by WIRED featured YouTubes " \
