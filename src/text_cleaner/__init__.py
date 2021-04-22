@@ -26,7 +26,6 @@ class CleanStaticMem:
 
 
 class Clean:
-    
     MIN_SENT_LENGTH = 20
 
     @staticmethod
@@ -239,8 +238,8 @@ class Clean:
         # add spaces after ?!,.  - only if you have a word after.
         text = re.sub(r'(?<=[.,?!])(?=[a-zA-Z][^\s])', r' ', text)
 
-         # domains ---------------------------------------
-        text = f' {text} '  
+        # domains ---------------------------------------
+        text = f' {text} '
         # ^ Here, it's usefull to keep space 
         # at start and end of string.
         text = text.replace(' . com ', '.com ')
@@ -328,13 +327,13 @@ class Clean:
         text = text.replace("___", "")
 
         # common errors from AI
-        text = text.replace(" ' t ", "'t ")     # don't
-        text = text.replace(" ' s ", "'s ")     # genitive's
-        text = text.replace(" ' m ", "'m ")     # I'm
-        text = text.replace(" ' ll ", "'ll ")   # we'll
-        text = text.replace(" ' d ", "'d ")     # I'd like to...
-        text = text.replace(" ' ve ", "'ve ")   # We've
-        text = text.replace(" ' re ", "'re ")   # We're
+        text = text.replace(" ' t ", "'t ")  # don't
+        text = text.replace(" ' s ", "'s ")  # genitive's
+        text = text.replace(" ' m ", "'m ")  # I'm
+        text = text.replace(" ' ll ", "'ll ")  # we'll
+        text = text.replace(" ' d ", "'d ")  # I'd like to...
+        text = text.replace(" ' ve ", "'ve ")  # We've
+        text = text.replace(" ' re ", "'re ")  # We're
         text = text.replace("' t ", "'t ")
         text = text.replace("' s ", "'s ")
         text = text.replace("' m ", "'m ")
