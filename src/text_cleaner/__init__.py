@@ -246,46 +246,57 @@ class Clean:
         text = text.replace(' . com ', '.com ')
         text = text.replace('. com ', '.com ')
         text = text.replace(' .com ', '.com ')
+        text = text.replace('. com,', '.com,')
 
         text = text.replace(' . gov ', '.gov ')
         text = text.replace('. gov ', '.gov ')
         text = text.replace(' .gov ', '.gov ')
+        text = text.replace('. gov,', '.gov,')
 
         text = text.replace(' . it ', '.it ')
         text = text.replace('. it ', '.it ')
         text = text.replace(' .it ', '.it ')
+        text = text.replace('. it,', '.it,')
 
         text = text.replace(' . fr ', '.fr ')
         text = text.replace('. fr ', '.fr ')
         text = text.replace(' .fr ', '.fr ')
+        text = text.replace('. fr,', '.fr,')
 
         text = text.replace(' . uk ', '.uk ')
         text = text.replace('. uk ', '.uk ')
         text = text.replace(' .uk ', '.uk ')
+        text = text.replace('. uk,', '.uk,')
 
         text = text.replace(' . us ', '.us ')
         text = text.replace('. us ', '.us ')
         text = text.replace(' .us ', '.us ')
+        text = text.replace('. us,', '.us,')
 
         text = text.replace(' . pk ', '.pk ')
         text = text.replace('. pk ', '.pk ')
         text = text.replace(' .pk ', '.pk ')
+        text = text.replace('. pk,', '.pk,')
 
         text = text.replace(' . eu ', '.eu ')
         text = text.replace('. eu ', '.eu ')
         text = text.replace(' .eu ', '.eu ')
+        text = text.replace('. eu,', '.eu,')
 
         text = text.replace(' . ru ', '.ru ')
         text = text.replace('. ru ', '.ru ')
         text = text.replace(' .ru ', '.ru ')
+        text = text.replace('. ru,', '.ru,')
 
         text = text.replace(' . org ', '.org ')
         text = text.replace('. org ', '.org ')
         text = text.replace(' .org ', '.org ')
+        text = text.replace('. org,', '.org,')
 
         text = text.replace(' . net ', '.net ')
         text = text.replace('. net ', '.net ')
         text = text.replace(' .net ', '.net ')
+        text = text.replace('. net,', '.net,')
         text = text.strip()
         # ------------------------------------------------
 
