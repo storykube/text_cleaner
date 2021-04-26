@@ -456,7 +456,15 @@ class Clean:
         count_quotes_open = text.count('“')
         count_quotes_close = text.count('”')
         count_quotes = count_quotes_open + count_quotes_close
-        if count_quotes > 0 and count_quotes % 2 != 0:  # odd results
+        if count_quotes_open > 0 and count_quotes_close == 0:
+            text = text.replace('““', '')
+            text = text.replace('“', '')
+
+        elif count_quotes_close > 0 and count_quotes_open == 0:
+            text = text.replace('””', '')
+            text = text.replace('”', '')
+
+        elif count_quotes > 0 and count_quotes % 2 != 0:  # odd results
             dict_occurs = {}
             dict_scores = {}
             quotes_occurs = re.findall(r'(“.*?”)', text)
