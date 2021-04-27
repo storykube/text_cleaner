@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 
-import copy
 import hashlib
 import logging
 import re
@@ -43,7 +42,7 @@ class Clean:
         return clean_text
 
     @staticmethod
-    def checkHTML(text) -> str:
+    def check_html(text) -> str:
 
         text = unicode_simplify_punctuation(text)
 
@@ -123,7 +122,7 @@ class Clean:
         # with "something"
         # -------------------------------------------
 
-        text = Clean.replace_strange_quotes(text)
+        text = Clean.replace_single_quotes_strategy(text)
 
         # -------------------------------------------
 
@@ -199,14 +198,6 @@ class Clean:
                 to_replace = deepcopy(r)
                 to_replace = to_replace.replace(', “', ' ')
                 text = text.replace(r, to_replace)
-
-        # if there is a duplicate “ “ in a short len (150chars), fix
-        # ex: [...] which has been run under the “ one country, two systems “
-        # becomes: [...] which has been run under the “one country, two systems”
-        res = re.findall('“(.*?)“', text)
-        for r in res:
-            if len(r) <= 150 and '”' not in r:
-                text = text.replace(r, r + '”~')
 
         text = text.replace('”~“', '”')
         text = text.replace('”~ “', '”')
@@ -444,7 +435,7 @@ class Clean:
         # I'm saving into cache also the elaborated clean text, to avoid multiple clean of the same input.
         text_cleaned_cache_key = get_md5_from_string(input_text)
 
-        # text = unicode_simplify_punctuation(text)  # latest unicode replacement
+        text = unicode_simplify_punctuation(text)  # latest unicode replacement
 
         CleanStaticMem.cache[text_cleaned_cache_key] = text
 
@@ -531,7 +522,7 @@ class Clean:
         return text[::-1].replace(original_text[::-1], new_text[::-1], 1)[::-1]
 
     @staticmethod
-    def replace_strange_quotes(text: str):
+    def replace_single_quotes_strategy(text: str):
 
         sent_tok = SentenceTokenizer()
         sent_tok.set(text)
