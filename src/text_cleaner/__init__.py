@@ -435,8 +435,6 @@ class Clean:
         # I'm saving into cache also the elaborated clean text, to avoid multiple clean of the same input.
         text_cleaned_cache_key = get_md5_from_string(input_text)
 
-        text = unicode_simplify_punctuation(text)  # latest unicode replacement
-
         CleanStaticMem.cache[text_cleaned_cache_key] = text
 
         return text
