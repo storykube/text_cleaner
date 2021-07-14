@@ -104,6 +104,10 @@ class Clean:
         if text in CleanStaticMem.cache.keys():
             return CleanStaticMem.cache[cache_key]
 
+        # Improve the \n
+        text = text.replace("\n", '. ')
+        text = text.replace('.. ', '. ')
+
         # Clean text from wrong repeated quotes.
         text = text.replace('“““', '“')  # open apices (x3)
         text = text.replace('““', '“')  # open apices (x2)
