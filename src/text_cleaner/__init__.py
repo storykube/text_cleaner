@@ -436,6 +436,13 @@ class Clean:
 
         CleanStaticMem.cache[cache_key] = text
 
+        quotes_match = re.findall('“|”', text)
+        if len(quotes_match) > 0:
+            if quotes_match[0] == '”':
+                text = '“' + text
+            if quotes_match[-1] == '“':
+                text = text + '”'
+
         # I'm saving into cache also the elaborated clean text, to avoid multiple clean of the same input.
         text_cleaned_cache_key = get_md5_from_string(input_text)
 
