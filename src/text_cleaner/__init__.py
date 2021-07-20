@@ -438,9 +438,9 @@ class Clean:
 
         quotes_match = re.findall('“|”', text)
         if len(quotes_match) > 0:
-            if quotes_match[0] == '”':
+            if quotes_match[0] == '”' and len(text.split('”')[0]) < 150:
                 text = '“' + text
-            if quotes_match[-1] == '“':
+            if quotes_match[-1] == '“' and len(text.split('“')[-1]) < 150:
                 text = text + '”'
 
         # I'm saving into cache also the elaborated clean text, to avoid multiple clean of the same input.
