@@ -8,12 +8,12 @@ First of all, **install the storykube sentence tokenizer**
 
 ```bash
 pip3 install nltk
-pip3 install git+https://github.com/storykube/sentence-tokenizer.git
+pip3 install git+ssh://git@github.com/storykube/sentence-tokenizer.git
 ```
 
 Then:
 ```bash
-pip3 install git+https://github.com/storykube/text_cleaner.git
+pip3 install git+ssh://git@github.com/storykube/text_cleaner.git
 ```
 
 ## Usage.
