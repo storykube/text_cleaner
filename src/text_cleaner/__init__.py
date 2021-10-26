@@ -164,7 +164,7 @@ class Clean:
         text = text.replace("!.", "!")
 
         # add spaces after ?!  - only if you have a word after with first char uppercase only.
-        text = re.sub(r'(?<=[?!.])(?=[A-Z]{1,20}[a-z][^\s])', r' ', text)
+        text = re.sub(r'(?<=[?!.])(?=[A-Z]{1,20}[a-z]*[^\s])', r' ', text)
 
         # paragraph or notes marks
         ac = -1
