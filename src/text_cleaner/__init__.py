@@ -96,7 +96,7 @@ class Clean:
         return text
 
     @staticmethod
-    def that(input_text) -> str:
+    def that(input_text, clean_the_start=False) -> str:
 
         text = deepcopy(input_text)
 
@@ -113,6 +113,7 @@ class Clean:
         text = text.replace('““', '“')  # open apices (x2)
         text = text.replace('”””', '”')  # close apices (x3)
         text = text.replace('””', '”')  # close apices (x2)
+        text = text.replace('“”', '')  # empty
 
         text = Clean.remove_tags(text)
         # Add some space to between symbols
@@ -125,8 +126,8 @@ class Clean:
         # Replace strange quotes: ‘something’
         # with "something"
         # -------------------------------------------
-
-        text = Clean.replace_single_quotes_strategy(text)
+        # DEPRECATED. Totally useless.
+        # text = Clean.replace_single_quotes_strategy(text)
 
         # -------------------------------------------
 
@@ -147,16 +148,15 @@ class Clean:
 
         text = text.replace(" ` ", " \"")
         text = text.replace(" `", " \"")
+        text = text.replace('.".', '."')
 
-        text = text.replace('." ', '". ')
-        text = text.replace('" .', '".')
-        text = text.replace(' ".', '".')
-        text = text.replace('.".', '".')
-
-        text = text.replace('." ', '". ')
-        text = text.replace('" .', '".')
-        text = text.replace(' ".', '".')
-        text = text.replace(", ' \"", ', "')  # , ' " => , "
+        # Ignore the eur-italian quotation mark rules.
+        # use the us standard instead, because the AI will reasons in english
+        # --------------------------------------------------------------------------
+        # text = text.replace('." ', '". ')
+        # text = text.replace('" .', '".')
+        # text = text.replace(' ".', '".')
+        # text = text.replace(", ' \"", ', "')  # , ' " => , "
 
         # restore doubled quotes
         text = re.sub(r'(^|\s)\"', " “", text)
@@ -173,10 +173,10 @@ class Clean:
 
         text = text.replace('"', '“')  # latest tentative, classic replace.
 
-        text = text.replace('.” ', '”. ')
-        text = text.replace(',” ', '”, ')
-        text = text.replace('” .', '”.')
-        text = text.replace(' ”.', '”.')
+        # text = text.replace('.” ', '”. ')
+        # text = text.replace(',” ', '”, ')
+        # text = text.replace('” .', '”.')
+        # text = text.replace(' ”.', '”.')
 
         # single quote replace.
         res = re.findall('‘(.*?)’', text)
@@ -188,20 +188,20 @@ class Clean:
         # ’
         text = text.replace("\u2019", "'")
 
-        res = re.findall('“(.*?)”', text)
-        for r in res:
-            if '. “' in r:
-                to_replace = deepcopy(r)
-                to_replace = to_replace.replace('. “', '. ')
-                text = text.replace(r, to_replace)
-
-        # re-analyze, to get, now, only a single question mark with comma before
-        res = re.findall('“(.*?)”', text)
-        for r in res:
-            if ', “' in r:
-                to_replace = deepcopy(r)
-                to_replace = to_replace.replace(', “', ' ')
-                text = text.replace(r, to_replace)
+        # res = re.findall('“(.*?)”', text)
+        # for r in res:
+        #     if '. “' in r:
+        #         to_replace = deepcopy(r)
+        #         to_replace = to_replace.replace('. “', '. ')
+        #         text = text.replace(r, to_replace)
+        #
+        # # re-analyze, to get, now, only a single question mark with comma before
+        # res = re.findall('“(.*?)”', text)
+        # for r in res:
+        #     if ', “' in r:
+        #         to_replace = deepcopy(r)
+        #         to_replace = to_replace.replace(', “', ' ')
+        #         text = text.replace(r, to_replace)
 
         text = text.replace('”~“', '”')
         text = text.replace('”~ “', '”')
@@ -217,7 +217,8 @@ class Clean:
         text = text.replace("’", "'")
 
         # fix odd quotes.
-        text = Clean.fix_odd_quotes(text)
+        # DEPRECATED
+        # text = Clean.fix_odd_quotes(text)
 
         for x in range(5):
             res = re.findall('“(.*?)”', text)
@@ -230,69 +231,8 @@ class Clean:
         text = text.replace("?.", "?")
         text = text.replace("!.", "!")
 
-        # add spaces after ?!,.  - only if you have a word after.
-        text = re.sub(r'(?<=[.,?!])(?=[a-zA-Z][^\s])', r' ', text)
-
-        # domains ---------------------------------------
-        text = f' {text} '
-        # ^ Here, it's usefull to keep space 
-        # at start and end of string.
-        text = text.replace(' . com ', '.com ')
-        text = text.replace('. com ', '.com ')
-        text = text.replace(' .com ', '.com ')
-        text = text.replace('. com,', '.com,')
-
-        text = text.replace(' . gov ', '.gov ')
-        text = text.replace('. gov ', '.gov ')
-        text = text.replace(' .gov ', '.gov ')
-        text = text.replace('. gov,', '.gov,')
-
-        text = text.replace(' . it ', '.it ')
-        text = text.replace('. it ', '.it ')
-        text = text.replace(' .it ', '.it ')
-        text = text.replace('. it,', '.it,')
-
-        text = text.replace(' . fr ', '.fr ')
-        text = text.replace('. fr ', '.fr ')
-        text = text.replace(' .fr ', '.fr ')
-        text = text.replace('. fr,', '.fr,')
-
-        text = text.replace(' . uk ', '.uk ')
-        text = text.replace('. uk ', '.uk ')
-        text = text.replace(' .uk ', '.uk ')
-        text = text.replace('. uk,', '.uk,')
-
-        text = text.replace(' . us ', '.us ')
-        text = text.replace('. us ', '.us ')
-        text = text.replace(' .us ', '.us ')
-        text = text.replace('. us,', '.us,')
-
-        text = text.replace(' . pk ', '.pk ')
-        text = text.replace('. pk ', '.pk ')
-        text = text.replace(' .pk ', '.pk ')
-        text = text.replace('. pk,', '.pk,')
-
-        text = text.replace(' . eu ', '.eu ')
-        text = text.replace('. eu ', '.eu ')
-        text = text.replace(' .eu ', '.eu ')
-        text = text.replace('. eu,', '.eu,')
-
-        text = text.replace(' . ru ', '.ru ')
-        text = text.replace('. ru ', '.ru ')
-        text = text.replace(' .ru ', '.ru ')
-        text = text.replace('. ru,', '.ru,')
-
-        text = text.replace(' . org ', '.org ')
-        text = text.replace('. org ', '.org ')
-        text = text.replace(' .org ', '.org ')
-        text = text.replace('. org,', '.org,')
-
-        text = text.replace(' . net ', '.net ')
-        text = text.replace('. net ', '.net ')
-        text = text.replace(' .net ', '.net ')
-        text = text.replace('. net,', '.net,')
-        text = text.strip()
-        # ------------------------------------------------
+        # add spaces after ?!  - only if you have a word after.
+        text = re.sub(r'(?<=[?!])(?=[a-zA-Z][^\s])', r' ', text)
 
         # paragraph or notes marks
         ac = -1
@@ -303,12 +243,6 @@ class Clean:
             text = text.replace(f' ({str(ac)} ', '')
 
         # duplicate chars:
-        text = text.replace("????", "?")
-        text = text.replace("???", "?")
-        text = text.replace("??", "!")
-        text = text.replace("!!!!", "!")
-        text = text.replace("!!!", "!")
-        text = text.replace("!!", "!")
         text = text.replace("----", "-")
         text = text.replace("---", "-")
         text = text.replace("--", "-")
@@ -345,10 +279,6 @@ class Clean:
 
         # text = text.replace(".", ". ")  # this could be separate numbers. please keep it commented.
 
-        text = text.replace("  ", " ")  # after, dot-fix, single space, please
-        text = text.replace(" . ", ". ")
-        text = text.replace("  ", " ")  # after, dot-fix, single space, please
-        text = text.replace(" .", ".")
         text = text.replace(" ,", ",")
         text = text.replace(" !", "!")
         text = text.replace(" ?", "?")
@@ -374,25 +304,25 @@ class Clean:
             text = text[1:]
             text = text.strip()
 
-        # capitalize first letter on every sentences.
-        st = SentenceTokenizer()
-        st.set(text)
-        sentences = st.get()
-        for sent in sentences:
-            text = text.replace(sent, sent[0].upper() + sent[1:])
-
-        # capitalize first char of news
-        try:
-            text = text[0].upper() + text[1:]
-        except IndexError as e:
-            # logger.error(e)
-            pass
+        # # capitalize first letter on every sentences.
+        # st = SentenceTokenizer()
+        # st.set(text)
+        # sentences = st.get()
+        # for sent in sentences:
+        #     text = text.replace(sent, sent[0].upper() + sent[1:])
+        #
+        # # capitalize first char of news
+        # try:
+        #     text = text[0].upper() + text[1:]
+        # except IndexError as e:
+        #     # logger.error(e)
+        #     pass
 
         # removing double space (replace with only one) after sentences join
         text = text.replace("  ", " ")
 
-        # text = Clean.__clean_not_understandable_text(text)
-        text = Clean.clean_first_parts(text)
+        if clean_the_start:
+            text = Clean.clean_first_parts(text)
 
         # parenthesis fix
         text = text.replace("( ", "(")
@@ -421,18 +351,10 @@ class Clean:
         text = text.replace(" u. S.", " U.S.")
         text = text.replace(" u. s.", " U.S.")
 
-        # replace the number like 33, 3333 (error with comma formatting) with 33,3333
-        text = re.sub('(\d+)\,\s(\d{3,6})', r"\1,\2", text)
-
         # If sep is not specified or is None, a different splitting algorithm is applied: runs of consecutive
         # whitespace are regarded as a single separator, and the result will contain no empty strings at the start or
         # end if the string has leading or trailing whitespace.
         text = " ".join(text.split(sep=None))
-
-        # If there are some ~ maybe is because the procedure
-        # it was no able to clean all the stuff.
-        # It's better to remove it.
-        text = text.replace('~', '')
 
         CleanStaticMem.cache[cache_key] = text
 
@@ -450,40 +372,43 @@ class Clean:
 
         return text
 
-    @staticmethod
-    def fix_odd_quotes(text):
-        # fix odd quotes.
-        count_quotes_open = text.count('“')
-        count_quotes_close = text.count('”')
-        count_quotes = count_quotes_open + count_quotes_close
-        if count_quotes_open > 0 and count_quotes_close == 0:
-            text = text.replace('““', '')
-            text = text.replace('“', '')
-
-        elif count_quotes_close > 0 and count_quotes_open == 0:
-            text = text.replace('””', '')
-            text = text.replace('”', '')
-
-        elif count_quotes > 0 and count_quotes % 2 != 0:  # odd results
-            dict_occurs = {}
-            dict_scores = {}
-            quotes_occurs = re.findall(r'(“.*?”)', text)
-            quotes_occurs_greedy = re.findall(r'(“.*”)', text)
-            quotes_occurs.extend(quotes_occurs_greedy)
-            iq = -1
-            for text_quoted in quotes_occurs:
-                iq += 1
-                dict_scores[iq] = int(len(text_quoted))
-                dict_occurs[iq] = text_quoted
-
-            if len(dict_scores) > 0:  # if found.
-                to_remove_id = max(dict_scores, key=dict_scores.get)
-                to_remove_text = dict_occurs[to_remove_id]
-                if count_quotes_open > count_quotes_close:
-                    text = text.replace(to_remove_text, to_remove_text[1:])
-                else:
-                    text = text.replace(to_remove_text, to_remove_text[:-1])
-        return text
+    # DEPRECATED, useless => this must be fixed in the sentence tokenizer
+    # because the problem is generated there.
+    #
+    # @staticmethod
+    # def fix_odd_quotes(text):
+    #     # fix odd quotes.
+    #     count_quotes_open = text.count('“')
+    #     count_quotes_close = text.count('”')
+    #     count_quotes = count_quotes_open + count_quotes_close
+    #     if count_quotes_open > 0 and count_quotes_close == 0:
+    #         text = text.replace('““', '')
+    #         text = text.replace('“', '')
+    #
+    #     elif count_quotes_close > 0 and count_quotes_open == 0:
+    #         text = text.replace('””', '')
+    #         text = text.replace('”', '')
+    #
+    #     elif count_quotes > 0 and count_quotes % 2 != 0:  # odd results
+    #         dict_occurs = {}
+    #         dict_scores = {}
+    #         quotes_occurs = re.findall(r'(“.*?”)', text)
+    #         quotes_occurs_greedy = re.findall(r'(“.*”)', text)
+    #         quotes_occurs.extend(quotes_occurs_greedy)
+    #         iq = -1
+    #         for text_quoted in quotes_occurs:
+    #             iq += 1
+    #             dict_scores[iq] = int(len(text_quoted))
+    #             dict_occurs[iq] = text_quoted
+    #
+    #         if len(dict_scores) > 0:  # if found.
+    #             to_remove_id = max(dict_scores, key=dict_scores.get)
+    #             to_remove_text = dict_occurs[to_remove_id]
+    #             if count_quotes_open > count_quotes_close:
+    #                 text = text.replace(to_remove_text, to_remove_text[1:])
+    #             else:
+    #                 text = text.replace(to_remove_text, to_remove_text[:-1])
+    #     return text
 
     @staticmethod
     def clean_first_parts(text_string: str) -> str:
