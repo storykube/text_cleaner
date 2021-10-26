@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 
-import hashlib
 import logging
 import re
 from copy import deepcopy
@@ -10,15 +9,6 @@ from .unicode import unicode_simplify_punctuation
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
-
-def get_md5_from_string(input_string: str = ''):
-    if len(input_string) < 1:
-        return ''
-    hash_object = hashlib.md5(str(input_string).encode('utf-8'))
-    key = str(hash_object.hexdigest())
-    return key
-
 
 class CleanStaticMem:
     cache = {}
@@ -96,13 +86,9 @@ class Clean:
         return text
 
     @staticmethod
-    def that(input_text, clean_the_start=False) -> str:
+    def that(input_text) -> str:
 
         text = deepcopy(input_text)
-
-        cache_key = get_md5_from_string(input_text)
-        if text in CleanStaticMem.cache.keys():
-            return CleanStaticMem.cache[cache_key]
 
         # Improve the \n
         text = text.replace("\n", '. ')
@@ -121,15 +107,6 @@ class Clean:
         # (the double spaces must be removed
         # immediately after this).
         text = text.replace("/", " / ")
-
-        # -------------------------------------------
-        # Replace strange quotes: ‘something’
-        # with "something"
-        # -------------------------------------------
-        # DEPRECATED. Totally useless.
-        # text = Clean.replace_single_quotes_strategy(text)
-
-        # -------------------------------------------
 
         # removing double space (replace with only one)
         text = text.replace("  ", " ")
@@ -150,14 +127,6 @@ class Clean:
         text = text.replace(" `", " \"")
         text = text.replace('.".', '."')
 
-        # Ignore the eur-italian quotation mark rules.
-        # use the us standard instead, because the AI will reasons in english
-        # --------------------------------------------------------------------------
-        # text = text.replace('." ', '". ')
-        # text = text.replace('" .', '".')
-        # text = text.replace(' ".', '".')
-        # text = text.replace(", ' \"", ', "')  # , ' " => , "
-
         # restore doubled quotes
         text = re.sub(r'(^|\s)\"', " “", text)
         text = re.sub(r'\"\s', "” ", text)
@@ -173,11 +142,6 @@ class Clean:
 
         text = text.replace('"', '“')  # latest tentative, classic replace.
 
-        # text = text.replace('.” ', '”. ')
-        # text = text.replace(',” ', '”, ')
-        # text = text.replace('” .', '”.')
-        # text = text.replace(' ”.', '”.')
-
         # single quote replace.
         res = re.findall('‘(.*?)’', text)
         for r in res:
@@ -187,21 +151,6 @@ class Clean:
         # if those ’ remain in the text, then:
         # ’
         text = text.replace("\u2019", "'")
-
-        # res = re.findall('“(.*?)”', text)
-        # for r in res:
-        #     if '. “' in r:
-        #         to_replace = deepcopy(r)
-        #         to_replace = to_replace.replace('. “', '. ')
-        #         text = text.replace(r, to_replace)
-        #
-        # # re-analyze, to get, now, only a single question mark with comma before
-        # res = re.findall('“(.*?)”', text)
-        # for r in res:
-        #     if ', “' in r:
-        #         to_replace = deepcopy(r)
-        #         to_replace = to_replace.replace(', “', ' ')
-        #         text = text.replace(r, to_replace)
 
         text = text.replace('”~“', '”')
         text = text.replace('”~ “', '”')
@@ -215,10 +164,6 @@ class Clean:
         text = text.replace('”', '” ')
 
         text = text.replace("’", "'")
-
-        # fix odd quotes.
-        # DEPRECATED
-        # text = Clean.fix_odd_quotes(text)
 
         for x in range(5):
             res = re.findall('“(.*?)”', text)
@@ -304,25 +249,8 @@ class Clean:
             text = text[1:]
             text = text.strip()
 
-        # # capitalize first letter on every sentences.
-        # st = SentenceTokenizer()
-        # st.set(text)
-        # sentences = st.get()
-        # for sent in sentences:
-        #     text = text.replace(sent, sent[0].upper() + sent[1:])
-        #
-        # # capitalize first char of news
-        # try:
-        #     text = text[0].upper() + text[1:]
-        # except IndexError as e:
-        #     # logger.error(e)
-        #     pass
-
         # removing double space (replace with only one) after sentences join
         text = text.replace("  ", " ")
-
-        if clean_the_start:
-            text = Clean.clean_first_parts(text)
 
         # parenthesis fix
         text = text.replace("( ", "(")
@@ -356,8 +284,6 @@ class Clean:
         # end if the string has leading or trailing whitespace.
         text = " ".join(text.split(sep=None))
 
-        CleanStaticMem.cache[cache_key] = text
-
         quotes_match = re.findall('“|”', text)
         if len(quotes_match) > 0:
             if quotes_match[0] == '”' and len(text.split('”')[0]) < 150:
@@ -365,129 +291,10 @@ class Clean:
             if quotes_match[-1] == '“' and len(text.split('“')[-1]) < 150:
                 text = text + '”'
 
-        # I'm saving into cache also the elaborated clean text, to avoid multiple clean of the same input.
-        text_cleaned_cache_key = get_md5_from_string(input_text)
-
-        CleanStaticMem.cache[text_cleaned_cache_key] = text
-
         return text
-
-    # DEPRECATED, useless => this must be fixed in the sentence tokenizer
-    # because the problem is generated there.
-    #
-    # @staticmethod
-    # def fix_odd_quotes(text):
-    #     # fix odd quotes.
-    #     count_quotes_open = text.count('“')
-    #     count_quotes_close = text.count('”')
-    #     count_quotes = count_quotes_open + count_quotes_close
-    #     if count_quotes_open > 0 and count_quotes_close == 0:
-    #         text = text.replace('““', '')
-    #         text = text.replace('“', '')
-    #
-    #     elif count_quotes_close > 0 and count_quotes_open == 0:
-    #         text = text.replace('””', '')
-    #         text = text.replace('”', '')
-    #
-    #     elif count_quotes > 0 and count_quotes % 2 != 0:  # odd results
-    #         dict_occurs = {}
-    #         dict_scores = {}
-    #         quotes_occurs = re.findall(r'(“.*?”)', text)
-    #         quotes_occurs_greedy = re.findall(r'(“.*”)', text)
-    #         quotes_occurs.extend(quotes_occurs_greedy)
-    #         iq = -1
-    #         for text_quoted in quotes_occurs:
-    #             iq += 1
-    #             dict_scores[iq] = int(len(text_quoted))
-    #             dict_occurs[iq] = text_quoted
-    #
-    #         if len(dict_scores) > 0:  # if found.
-    #             to_remove_id = max(dict_scores, key=dict_scores.get)
-    #             to_remove_text = dict_occurs[to_remove_id]
-    #             if count_quotes_open > count_quotes_close:
-    #                 text = text.replace(to_remove_text, to_remove_text[1:])
-    #             else:
-    #                 text = text.replace(to_remove_text, to_remove_text[:-1])
-    #     return text
-
-    @staticmethod
-    def clean_first_parts(text_string: str) -> str:
-
-        hypothetical_introduction = text_string[:50]
-        # logger.info(hypothetical_introduction)
-
-        parenthesis_content = re.findall("\(.*?\)", hypothetical_introduction)
-        for tx in parenthesis_content:
-            # logger.info(tx + " deleted")
-            if tx != 'SK':
-                text_string = text_string.replace(" " + tx, "")
-
-        st = SentenceTokenizer()
-        st.set(text_string)
-        sentences = st.get()
-
-        for sent in sentences:
-
-            if len(sent) >= 20:
-
-                original_sent = deepcopy(sent)
-
-                sent_hypothetical_intro = sent[:20]
-
-                if ' - ' in sent_hypothetical_intro:
-                    before_sep = sent_hypothetical_intro.split(' - ')[0]
-                    sent = sent.replace(f"{before_sep} - ", '')
-
-                if ' \ ' in sent_hypothetical_intro:
-                    before_sep = sent_hypothetical_intro.split(' \\ ')[0]
-                    sent = sent.replace(f"{before_sep} \\ ", '')
-
-                if ' / ' in sent_hypothetical_intro:
-                    before_sep = sent_hypothetical_intro.split(' / ')[0]
-                    sent = sent.replace(f"{before_sep} / ", '')
-
-                text_string = text_string.replace(original_sent, sent)
-
-        return text_string
 
     @staticmethod
     def replace_from_right(text: str, original_text: str, new_text: str) -> str:
         """ Replace first occurrence of original_text by new_text. """
         return text[::-1].replace(original_text[::-1], new_text[::-1], 1)[::-1]
 
-    @staticmethod
-    def replace_single_quotes_strategy(text: str):
-
-        sent_tok = SentenceTokenizer()
-        sent_tok.set(text)
-        sentences = sent_tok.get()
-
-        for original_sentence in sentences:
-
-            new_sentence = deepcopy(original_sentence)
-
-            matches = re.findall(r'\‘(.+?)\’', new_sentence)
-            for strange_quote in matches:
-                new_sentence = new_sentence.replace(
-                    strange_quote, '~~' + strange_quote + '~~')
-
-            new_sentence = new_sentence.replace('‘~~', ' «')
-            new_sentence = new_sentence.replace('~~’', '» ')
-
-            matches = re.findall(
-                r"(^|\s)\'([a-zA-Z0-9\-\,\s]{0,150}?)\'($|\s)", new_sentence)
-
-            for strange_quote in matches:
-
-                for st in strange_quote:
-                    if len(st.strip()) > 1:
-                        new_sentence = new_sentence.replace(
-                            st, '~~' + st + '~~')
-
-            new_sentence = new_sentence.replace("'~~", ' "')
-            new_sentence = new_sentence.replace("~~'", '" ')
-
-            text = text.replace(original_sentence, new_sentence)
-            text = text.replace('  ', ' ')
-
-        return text
