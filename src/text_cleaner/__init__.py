@@ -3,27 +3,14 @@
 import logging
 import re
 from copy import deepcopy
-
-from sentence_tokenizer import SentenceTokenizer
 from .unicode import unicode_simplify_punctuation
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-class CleanStaticMem:
-    cache = {}
-
 
 class Clean:
     MIN_SENT_LENGTH = 20
-
-    @staticmethod
-    def valid_to_be_cleaned(text):
-        if text.count('“') > 30 or text.count('”') > 30 or text.count('"') > 30:
-            logger.error(
-                f'The text contains a lot of weird quotes. It\'s not valid.')
-            return False
-        return True
 
     @staticmethod
     def remove_tags(text):
@@ -176,8 +163,8 @@ class Clean:
         text = text.replace("?.", "?")
         text = text.replace("!.", "!")
 
-        # add spaces after ?!  - only if you have a word after.
-        text = re.sub(r'(?<=[?!])(?=[a-zA-Z][^\s])', r' ', text)
+        # add spaces after ?!  - only if you have a word after with first char uppercase only.
+        text = re.sub(r'(?<=[?!.])(?=[A-Z]{1,20}[a-z][^\s])', r' ', text)
 
         # paragraph or notes marks
         ac = -1
@@ -221,8 +208,6 @@ class Clean:
 
         text = text.replace(",.", ".")
         text = text.replace('."', '. "')
-
-        # text = text.replace(".", ". ")  # this could be separate numbers. please keep it commented.
 
         text = text.replace(" ,", ",")
         text = text.replace(" !", "!")
@@ -297,4 +282,3 @@ class Clean:
     def replace_from_right(text: str, original_text: str, new_text: str) -> str:
         """ Replace first occurrence of original_text by new_text. """
         return text[::-1].replace(original_text[::-1], new_text[::-1], 1)[::-1]
-
