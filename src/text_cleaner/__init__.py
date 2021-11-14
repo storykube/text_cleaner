@@ -79,7 +79,11 @@ class Clean:
 
         # Improve the \n
         text = text.replace("\n", '. ')
+
+        # Fix some punctuation errors
         text = text.replace('.. ', '. ')
+        text = text.replace(':.. ', ': ')
+        text = text.replace(':. ', ': ')
 
         # Clean text from wrong repeated quotes.
         text = text.replace('“““', '“')  # open apices (x3)
