@@ -73,7 +73,7 @@ class Clean:
         return text
 
     @staticmethod
-    def that(input_text) -> str:
+    def that(input_text, remove_tags=True) -> str:
 
         text = deepcopy(input_text)
 
@@ -92,7 +92,9 @@ class Clean:
         text = text.replace('””', '”')  # close apices (x2)
         text = text.replace('“”', '')  # empty
 
-        text = Clean.remove_tags(text)
+        if remove_tags:
+            text = Clean.remove_tags(text)
+
         # Add some space to between symbols
         # to separate them from chars.
         # (the double spaces must be removed
