@@ -11,3 +11,16 @@ text = "The agency was expected to choose two of the three teams\", so SpaceX's 
 r = Clean.that(text)
 
 print(r)
+
+print("\r\n\r\n")
+
+text_html = "The agency was expected to choose two of the three teams\", so SpaceX's selection was unexpected. SpaceX " \
+       "chose the third from among the four, and made it its preferred vehicle to\" fly a mission in the next two " \
+       "years. <b>The SN11 prototype rocket stands on the launchpad at the company's facility in Boca Chica, Texas.</b>" \
+       "Let's try to write a website domain www.storykube.com, does it work? Also:. this is the #hashtag of this post. " \
+       "For example this is a <a href=\"#\">number</a> with letter later 2.B than start another text. " \
+       "But now we need to fix that bottles.He knows it. "
+
+r = Clean.that(text_html, False)
+
+print(r)

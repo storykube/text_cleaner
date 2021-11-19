@@ -92,15 +92,6 @@ class Clean:
         text = text.replace('””', '”')  # close apices (x2)
         text = text.replace('“”', '')  # empty
 
-        if remove_tags:
-            text = Clean.remove_tags(text)
-
-        # Add some space to between symbols
-        # to separate them from chars.
-        # (the double spaces must be removed
-        # immediately after this).
-        text = text.replace("/", " / ")
-
         # removing double space (replace with only one)
         text = text.replace("  ", " ")
 
@@ -158,16 +149,30 @@ class Clean:
 
         text = text.replace("’", "'")
 
-        for x in range(5):
-            res = re.findall('“(.*?)”', text)
-            for r in res:
-                original_sent = deepcopy(r)
-                if len(r) <= 300:
-                    r = r.replace('”', '')
-                    text = text.replace(original_sent, r)
+        # Issues here. Better to skip.
+        # for x in range(5):
+        #     res = re.findall('“(.*?)”', text)
+        #     for r in res:
+        #         original_sent = deepcopy(r)
+        #         if len(r) <= 300:
+        #             r = r.replace('”', '')
+        #             text = text.replace(original_sent, r)
 
         text = text.replace("?.", "?")
         text = text.replace("!.", "!")
+
+        if remove_tags:
+            text = Clean.remove_tags(text)
+        else:
+            # protect quotes in the html attributes
+            res_q = re.findall('<(.*?)>', text)
+            print(res_q)
+            for r in res_q:
+                original_sent = deepcopy(r)
+                r = r.replace('”', '"')
+                r = r.replace('“', '"')
+                r = r.replace(' "', '"')
+                text = text.replace(original_sent, r)
 
         # add spaces after ?!  - only if you have a word after with first char uppercase only.
         text = re.sub(r'(?<=[?!.])(?=[A-Z]{1,20}[a-z]*[^\s])', r' ', text)

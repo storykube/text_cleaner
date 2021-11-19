@@ -7,7 +7,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="text_cleaner",
-    version="0.2.4",
+    version="0.2.5",
     author="Ottavio Fogliata",
     author_email="ottavio.fogliata@storykube.com",
     description="A really rough text cleaner with an ugly code. But very useful.",
