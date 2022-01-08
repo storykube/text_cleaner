@@ -85,6 +85,9 @@ class Clean:
         text = text.replace(':.. ', ': ')
         text = text.replace(':. ', ': ')
         text = text.replace('. .', '.')
+        text = text.replace('...', '___d___')
+        text = text.replace('..', '.')
+        text = text.replace('___d___', '...')  # restore
 
         # Clean text from wrong repeated quotes.
         text = text.replace('“““', '“')  # open apices (x3)
