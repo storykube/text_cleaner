@@ -291,6 +291,9 @@ class Clean:
             if quotes_match[-1] == '“' and len(text.split('“')[-1]) < 150:
                 text = text + '”'
 
+        # weird stuff from wikipedia
+        text = text.replace('[edit]', '')
+
         return text
 
     @staticmethod
